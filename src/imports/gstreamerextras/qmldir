@@ -1,0 +1,3 @@
+module QtGstreamerExtras
+plugin declarative_gstreamer
+classname QQmlGstreamerModule
