@@ -1,4 +1,4 @@
 TEMPLATE = subdirs
 
-SUBDIRS += filters qt-launch playbin
+SUBDIRS += filters qt-launch playbin streamer
 

@@ -2,7 +2,6 @@ TEMPLATE = app
 TARGET = filters
 QT += qml quick
 
-# Input
 SOURCES += main.cpp
 RESOURCES += qml.qrc
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2018 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -49,62 +49,18 @@
 ****************************************************************************/
 
 #include "streamer.h"
-#include <QQuickItemGrabResult>
+#include <QApplication>
+#include <QQmlApplicationEngine>
 
-void AppSrc::imageReady()
+int main(int argc, char *argv[])
 {
-    auto img = m_grabResult->image();
-    img.reinterpretAsFormat(QImage::Format_ARGB32);
-    m_frame = img;
-    m_grabResult.reset();
-}
+    qmlRegisterType<Streamer>("Streamer", 1, 0, "Streamer");
 
-bool AppSrc::readFrame(QVideoFrame &frame) const
-{
-    if (!m_frame.isValid() && m_streamer->item()) {
-        m_grabResult = qobject_cast<QQuickItem*>(m_streamer->item())->grabToImage();
-        connect(m_grabResult.data(), &QQuickItemGrabResult::ready, this, &AppSrc::imageReady);
-        return false;
-    }
+    QApplication app(argc, argv);
 
-    frame = m_frame;
-    m_frame = QVideoFrame();
+    QQmlApplicationEngine engine;
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
-    return true;
-}
-
-Streamer::Streamer(QObject *parent)
-    : QGstreamerPipeline(parent)
-{
-    connect(this, &QGstreamerPipeline::pipelineChanged,
-        this, &Streamer::onPipelineChanged);
-}
-
-QObject *Streamer::item() const
-{
-    return m_item;
-}
-
-void Streamer::setItem(QObject *src)
-{
-    auto item = qobject_cast<QQuickItem*>(src);
-    if (m_item == item)
-        return;
-
-    m_item = item;
-    emit itemChanged();
-}
-
-void Streamer::onPipelineChanged()
-{
-    GstElement *pl = pipeline();
-    if (!pl)
-        return;
-
-    auto appsrc = gst_bin_get_by_name(GST_BIN(pl), "source");
-    if (!appsrc)
-        return;
-
-    m_appsrc.reset(new AppSrc(this, appsrc));
+    return app.exec();
 }
 

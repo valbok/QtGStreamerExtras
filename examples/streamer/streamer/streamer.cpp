@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2018 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the examples of the Qt Toolkit.
@@ -48,59 +48,63 @@
 **
 ****************************************************************************/
 
-#ifndef STREAMER_H
-#define STREAMER_H
+#include "streamer.h"
+#include <QQuickItemGrabResult>
 
-#include <QGstreamerPipeline>
-#include <private/qgstreamerappsrc_p.h>
-#include <QScopedPointer>
-#include <QPointer>
-#include <QQuickWindow>
-#include <QQuickItem>
-
-class Streamer;
-class AppSrc : public QGstreamerAppSrc
+void AppSrc::imageReady()
 {
-    Q_OBJECT
-public:
-    AppSrc(Streamer *streamer, GstElement *appsrc, QObject *parent = nullptr)
-        : QGstreamerAppSrc(appsrc, parent)
-        , m_streamer(streamer)
-    {
+    auto img = m_grabResult->image();
+    img.reinterpretAsFormat(QImage::Format_ARGB32);
+    m_frame = img;
+    m_grabResult.reset();
+}
+
+bool AppSrc::readFrame(QVideoFrame &frame) const
+{
+    if (!m_frame.isValid() && m_streamer->item()) {
+        m_grabResult = qobject_cast<QQuickItem*>(m_streamer->item())->grabToImage();
+        connect(m_grabResult.data(), &QQuickItemGrabResult::ready, this, &AppSrc::imageReady);
+        return false;
     }
 
-protected:
-    bool readFrame(QVideoFrame &frame) const override;
+    frame = m_frame;
+    m_frame = QVideoFrame();
 
-private Q_SLOTS:
-    void imageReady();
+    return true;
+}
 
-private:
-    Streamer *m_streamer = nullptr;
-    mutable QSharedPointer<QQuickItemGrabResult> m_grabResult;
-    mutable QVideoFrame m_frame;
-};
-
-class Streamer : public QGstreamerPipeline
+Streamer::Streamer(QObject *parent)
+    : QGstreamerPipeline(parent)
 {
-    Q_OBJECT
-    Q_PROPERTY(QObject* item READ item WRITE setItem NOTIFY itemChanged)
+    connect(this, &QGstreamerPipeline::pipelineChanged,
+        this, &Streamer::onPipelineChanged);
+}
 
-public:
-    Streamer(QObject *parent = nullptr);
+QObject *Streamer::item() const
+{
+    return m_item;
+}
 
-    QObject *item() const;
-    void setItem(QObject *item);
+void Streamer::setItem(QObject *src)
+{
+    auto item = qobject_cast<QQuickItem*>(src);
+    if (m_item == item)
+        return;
 
-Q_SIGNALS:
-    void itemChanged();
+    m_item = item;
+    emit itemChanged();
+}
 
-private Q_SLOTS:
-    void onPipelineChanged();
+void Streamer::onPipelineChanged()
+{
+    GstElement *pl = pipeline();
+    if (!pl)
+        return;
 
-private:
-    QScopedPointer<AppSrc> m_appsrc;
-    QQuickItem *m_item;
-};
+    auto appsrc = gst_bin_get_by_name(GST_BIN(pl), "src");
+    if (!appsrc)
+        return;
 
-#endif
+    m_appsrc.reset(new AppSrc(this, appsrc));
+}
+
