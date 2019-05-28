@@ -52,19 +52,19 @@
 #define STREAMER_H
 
 #include <QGstPipeline>
-#include <private/qgstappsrc_p.h>
+#include <private/qgstvideoappsrc_p.h>
 #include <QScopedPointer>
 #include <QPointer>
 #include <QQuickWindow>
 #include <QQuickItem>
 
 class Streamer;
-class AppSrc : public QGstAppSrc
+class AppSrc : public QGstVideoAppSrc
 {
     Q_OBJECT
 public:
     AppSrc(Streamer *streamer, GstElement *appsrc, QObject *parent = nullptr)
-        : QGstAppSrc(appsrc, parent)
+        : QGstVideoAppSrc(appsrc, parent)
         , m_streamer(streamer)
     {
     }
