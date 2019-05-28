@@ -28,6 +28,8 @@ QGstPlaybin provides some playbin related functionalities:
 - textStreamsCount: Number of text streams
 - textStream: Current text stream
 
+Changing of the video sink could be done like:
+
     QGstPlaybin playbin(player); 
     playbin.setVideoSink("xvimagesink");
 
@@ -70,3 +72,12 @@ Here is the simplest example how to use controls from QML MediaPlayer element wi
            }
         }
     }
+
+# Examples
+
+Some examples could be found in *examples* dir.
+
+E.g. the streamer example allows to create a video stream of rendered QML elements. 
+Consists of the *streamer* bin which takes QML VideoOutput element, grabs its content and sends over the network via udp.
+The *receiver* bin just listens to defined port and renders received content to its VideoOutput element.
+
