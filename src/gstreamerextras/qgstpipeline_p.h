@@ -51,14 +51,14 @@
 // We mean it.
 //
 
-#include <private/qgstplayersession_p.h>
+#include <private/qgstreamerplayersession_p.h>
 #include <QPointer>
 
 QT_BEGIN_NAMESPACE
 
 class QMediaPlayer;
 class QGstPipeline;
-class QGstVideoRendererInterface;
+class QGstreamerVideoRendererInterface;
 class QGstPipelinePrivate
 {
     Q_DECLARE_PUBLIC(QGstPipeline)
@@ -68,14 +68,14 @@ public:
     ~QGstPipelinePrivate() { }
 
     bool isReady() const { return session; }
-    QGstVideoRendererInterface *renderer() const;
+    QGstreamerVideoRendererInterface *renderer() const;
 
 protected:
     QGstPipeline *q_ptr = nullptr;
 
     QPointer<QObject> source;
     QPointer<QMediaPlayer> mediaPlayer;
-    QGstPlayerSession *session = nullptr;
+    QGstreamerPlayerSession *session = nullptr;
     QString pipelineDesc;
     QString pendingPipelineDesc;
 };

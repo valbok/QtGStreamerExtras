@@ -39,12 +39,12 @@
 
 #include "qgstpipeline.h"
 #include "qgstpipeline_p.h"
-#include <private/qgstvideorenderer_p.h>
+#include <private/qgstreamervideorenderer_p.h>
 #include <QMediaService>
 
 QT_BEGIN_NAMESPACE
 
-QGstVideoRendererInterface *QGstPipelinePrivate::renderer() const
+QGstreamerVideoRendererInterface *QGstPipelinePrivate::renderer() const
 {
     return session ? session->renderer() : nullptr;
 }
@@ -125,12 +125,12 @@ void QGstPipeline::setMediaPlayer(QMediaPlayer *src)
     if (!service)
         return;
 
-    auto control = qobject_cast<QGstPlayerControl *>(service->requestControl(QMediaPlayerControl_iid));
+    auto control = qobject_cast<QGstreamerPlayerControl *>(service->requestControl(QMediaPlayerControl_iid));
     d->session = control ? control->session() : nullptr;
     if (!d->session)
         return;
 
-    connect(d->session, &QGstPlayerSession::pipelineChanged,
+    connect(d->session, &QGstreamerPlayerSession::pipelineChanged,
         this, &QGstPipeline::pipelineChanged);
 
     d->mediaPlayer = src;

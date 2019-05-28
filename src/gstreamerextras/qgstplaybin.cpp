@@ -39,7 +39,7 @@
 
 #include "qgstplaybin.h"
 #include "qgstpipeline_p.h"
-#include <private/qgstvideorendererinterface_p.h>
+#include <private/qgstreamervideorendererinterface_p.h>
 #include <QtMultimedia/qmediametadata.h>
 
 QT_BEGIN_NAMESPACE
@@ -101,14 +101,14 @@ void QGstPlaybinPrivate::mediaPlayerChanged()
     if (!isReady())
         return;
 
-    QObject::connect(session, &QGstPlayerSession::streamsChanged,
+    QObject::connect(session, &QGstreamerPlayerSession::streamsChanged,
         q, [this, q]() {
             streamsChanged();
             q->setAudioStream(pendingAudioStream);
             q->setVideoStream(pendingVideoStream);
             q->setTextStream(pendingTextStream);
         });
-    QObject::connect(session, &QGstPlayerSession::rendererChanged,
+    QObject::connect(session, &QGstreamerPlayerSession::rendererChanged,
         q, [this]() { updatePlaybin(); });
 
     // In case if these values've been applied
