@@ -47,7 +47,7 @@
 QT_BEGIN_NAMESPACE
 
 class QGstPlaybinPrivate;
-class Q_MULTIMEDIA_EXPORT QGstPlaybin : public QGstPipeline
+class Q_GSTREAMEREXTRAS_EXPORT QGstPlaybin : public QGstPipeline
 {
     Q_OBJECT
     Q_PROPERTY(QString videoSink READ videoSink WRITE setVideoSink NOTIFY videoSinkChanged)

@@ -37,61 +37,23 @@
 **
 ****************************************************************************/
 
-#ifndef QGSTPIPELINE_H
-#define QGSTPIPELINE_H
+#ifndef QGSTREAMEREXTRAS_GLOBAL_H
+#define QGSTREAMEREXTRAS_GLOBAL_H
 
-#include <QtGStreamerExtras/qtgstreamerextras_global.h>
-#include <QVariantMap>
-#include <QUrl>
-#include <gst/gst.h>
+#include <QtCore/qglobal.h>
 
 QT_BEGIN_NAMESPACE
 
-class QMediaPlayer;
-class QGstPipelinePrivate;
-class Q_GSTREAMEREXTRAS_EXPORT QGstPipeline : public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY(QObject* source READ source WRITE setSource NOTIFY sourceChanged)
-    Q_PROPERTY(QMediaPlayer* mediaPlayer READ mediaPlayer NOTIFY mediaPlayerChanged SCRIPTABLE false DESIGNABLE false)
-    Q_PROPERTY(QString pipeline READ pipelineDesc WRITE setPipeline NOTIFY pipelineChanged)
-
-public:
-    QGstPipeline(QObject *parent = nullptr);
-    QGstPipeline(QMediaPlayer *player, QObject *parent = nullptr);
-    ~QGstPipeline();
-
-    QObject *source() const;
-    void setSource(QObject *source);
-
-    QMediaPlayer *mediaPlayer() const;
-    void setMediaPlayer(QMediaPlayer *source);
-
-    QString pipelineDesc() const;
-    void setPipeline(const QString &desc);
-    GstElement *pipeline() const;
-
-    Q_INVOKABLE bool set(const QString &elementName, const QVariantMap &map);
-
-Q_SIGNALS:
-    void sourceChanged();
-    void mediaPlayerChanged();
-    void pipelineChanged();
-
-private Q_SLOTS:
-    void updateMediaPlayer();
-
-protected:
-    QGstPipeline(QGstPipelinePrivate *d,
-        QMediaPlayer *player = nullptr, QObject *parent = nullptr);
-
-    QGstPipelinePrivate *d_ptr = nullptr;
-
-private:
-    Q_DISABLE_COPY(QGstPipeline)
-    Q_DECLARE_PRIVATE(QGstPipeline)
-};
+#ifndef QT_STATIC
+# if defined(QT_BUILD_GSTREAMEREXTRAS_LIB)
+#  define Q_GSTREAMEREXTRAS_EXPORT Q_DECL_EXPORT
+# else
+#  define Q_GSTREAMEREXTRAS_EXPORT Q_DECL_IMPORT
+# endif
+#else
+# define Q_GSTREAMEREXTRAS_EXPORT
+#endif
 
 QT_END_NAMESPACE
 
-#endif
+#endif // QGSTREAMEREXTRAS_GLOBAL_H

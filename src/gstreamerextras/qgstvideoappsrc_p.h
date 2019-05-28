@@ -51,13 +51,14 @@
 // We mean it.
 //
 
+#include <QtGStreamerExtras/qtgstreamerextras_global.h>
 #include <QVideoFrame>
 #include <gst/gst.h>
 
 QT_BEGIN_NAMESPACE
 
 class QGstVideoAppSrcPrivate;
-class Q_MULTIMEDIA_EXPORT QGstVideoAppSrc : public QObject
+class Q_GSTREAMEREXTRAS_EXPORT QGstVideoAppSrc : public QObject
 {
     Q_OBJECT
 public:
