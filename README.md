@@ -35,8 +35,14 @@ Changing of the video sink could be done like:
 
 # Build
 
+Build the module:
+
     qmake; make
     
+After If an app is widget based, need to add following to pro file:
+
+    QT += gstreamerextras
+
 Here is the simplest example how to use controls from QML MediaPlayer element with custom gstreamer pipeline:
 
     import QtQuick 2.9
