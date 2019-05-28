@@ -28,7 +28,7 @@
 
 import QtQuick 2.0
 import QtMultimedia 5.9
-import QtGstreamerExtras 5.12
+import QtGStreamerExtras 5.12
 import QtTest 1.0
 
 Item {
@@ -45,7 +45,7 @@ Item {
         loops: Audio.Infinite
     }
 
-    GstreamerPipeline {
+    Pipeline {
         id: control
         source: player
     }
@@ -74,7 +74,7 @@ Item {
         loops: Audio.Infinite
     }
 
-    GstreamerPipeline {
+    Pipeline {
         id: control2
         source: player2
     }
@@ -91,7 +91,7 @@ Item {
         loops: Audio.Infinite
     }
 
-    GstreamerPipeline {
+    Pipeline {
         id: control3
         source: player3
         pipeline: "videotestsrc ! autovideosink"

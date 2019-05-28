@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2018 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Toolkit.
@@ -37,8 +37,8 @@
 **
 ****************************************************************************/
 
-#ifndef QGSTREAMERPIPELINE_P_H
-#define QGSTREAMERPIPELINE_P_H
+#ifndef QGSTAPPSRC_H
+#define QGSTAPPSRC_H
 
 //
 //  W A R N I N G
@@ -51,35 +51,35 @@
 // We mean it.
 //
 
-#include <private/qgstreamerplayersession_p.h>
-#include <QPointer>
+#include <QVideoFrame>
+#include <gst/gst.h>
 
 QT_BEGIN_NAMESPACE
 
-class QMediaPlayer;
-class QGstreamerPipeline;
-class QGstreamerVideoRendererInterface;
-class QGstreamerPipelinePrivate
+class QGstAppSrcPrivate;
+class Q_MULTIMEDIA_EXPORT QGstAppSrc : public QObject
 {
-    Q_DECLARE_PUBLIC(QGstreamerPipeline)
-
+    Q_OBJECT
 public:
-    QGstreamerPipelinePrivate(QGstreamerPipeline *q) : q_ptr(q) { }
-    ~QGstreamerPipelinePrivate() { }
-
-    bool isReady() const { return session; }
-    QGstreamerVideoRendererInterface *renderer() const;
+    QGstAppSrc(GstElement *appsrc, QObject *parent = nullptr);
+    ~QGstAppSrc();
 
 protected:
-    QGstreamerPipeline *q_ptr = nullptr;
+    virtual bool readFrame(QVideoFrame &frame) const;
 
-    QPointer<QObject> source;
-    QPointer<QMediaPlayer> mediaPlayer;
-    QGstreamerPlayerSession *session = nullptr;
-    QString pipelineDesc;
-    QString pendingPipelineDesc;
+private Q_SLOTS:
+    void startFeed();
+    void stopFeed();
+
+private:
+    void timerEvent(QTimerEvent *event) override;
+
+    Q_DISABLE_COPY(QGstAppSrc)
+    Q_DECLARE_PRIVATE(QGstAppSrc)
+
+    QGstAppSrcPrivate *d_ptr = nullptr;
 };
 
 QT_END_NAMESPACE
 
-#endif
+#endif // QGSTAPPSRC_H

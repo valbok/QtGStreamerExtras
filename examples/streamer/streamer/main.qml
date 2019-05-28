@@ -2,7 +2,7 @@ import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.4
 import QtMultimedia 5.11
-import QtGstreamerExtras 5.12
+import QtGStreamerExtras 5.12
 import Streamer 1.0
 
 ApplicationWindow {

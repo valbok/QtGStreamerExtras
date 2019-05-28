@@ -26,14 +26,14 @@
 **
 ****************************************************************************/
 
-#include <QGstreamerPlaybin>
+#include <QGstPlaybin>
 #include <QMediaPlayer>
 #include <QAbstractVideoSurface>
 #include <QtTest/QtTest>
 
 QT_USE_NAMESPACE
 
-class tst_QGstreamerPlaybin: public QObject
+class tst_Playbin: public QObject
 {
     Q_OBJECT
 
@@ -55,7 +55,7 @@ private slots:
 
 private:
     QMediaPlayer *m_mediaPlayer = nullptr;
-    QGstreamerPlaybin *m_gst = nullptr;
+    QGstPlaybin *m_gst = nullptr;
 };
 
 struct Surface : QAbstractVideoSurface
@@ -77,22 +77,22 @@ struct Surface : QAbstractVideoSurface
     bool present(const QVideoFrame &) override { return true; }
 };
 
-void tst_QGstreamerPlaybin::init()
+void tst_Playbin::init()
 {
     m_mediaPlayer = new QMediaPlayer;
     m_mediaPlayer->setMedia(QUrl("qrc:/testdata/colors.mp4"));
-    m_gst = new QGstreamerPlaybin(m_mediaPlayer, m_mediaPlayer);
+    m_gst = new QGstPlaybin(m_mediaPlayer, m_mediaPlayer);
     m_mediaPlayer->setVideoOutput(new Surface(m_mediaPlayer));
 }
 
-void tst_QGstreamerPlaybin::cleanup()
+void tst_Playbin::cleanup()
 {
     delete m_mediaPlayer;
 }
 
-void tst_QGstreamerPlaybin::testVideoSink()
+void tst_Playbin::testVideoSink()
 {
-    QSignalSpy spy(m_gst, &QGstreamerPlaybin::videoSinkChanged);
+    QSignalSpy spy(m_gst, &QGstPlaybin::videoSinkChanged);
 
     QVERIFY(m_gst->videoSink().isEmpty());
     QString sink = "xvimagesink hue=100";
@@ -101,9 +101,9 @@ void tst_QGstreamerPlaybin::testVideoSink()
     QCOMPARE(sink, m_gst->videoSink());
 }
 
-void tst_QGstreamerPlaybin::testShowText()
+void tst_Playbin::testShowText()
 {
-    QSignalSpy spy(m_gst, &QGstreamerPlaybin::showTextChanged);
+    QSignalSpy spy(m_gst, &QGstPlaybin::showTextChanged);
 
     QVERIFY(!m_gst->showText());
     m_gst->setShowText(true);
@@ -117,9 +117,9 @@ void tst_QGstreamerPlaybin::testShowText()
     QCOMPARE(spy.count(), 2);
 }
 
-void tst_QGstreamerPlaybin::testTextUri()
+void tst_Playbin::testTextUri()
 {
-    QSignalSpy spy(m_gst, &QGstreamerPlaybin::textUriChanged);
+    QSignalSpy spy(m_gst, &QGstPlaybin::textUriChanged);
 
     QCOMPARE(m_gst->textUri(), QUrl());
     QUrl text("text.srt");
@@ -129,9 +129,9 @@ void tst_QGstreamerPlaybin::testTextUri()
     QCOMPARE(spy.count(), 1);
 }
 
-void tst_QGstreamerPlaybin::testTextFont()
+void tst_Playbin::testTextFont()
 {
-    QSignalSpy spy(m_gst, &QGstreamerPlaybin::textFontChanged);
+    QSignalSpy spy(m_gst, &QGstPlaybin::textFontChanged);
 
     QCOMPARE(m_gst->textFont(), QString());
     QString font = "Sans, 18";
@@ -140,36 +140,36 @@ void tst_QGstreamerPlaybin::testTextFont()
     QCOMPARE(spy.count(), 1);
 }
 
-void tst_QGstreamerPlaybin::testAudioStreams()
+void tst_Playbin::testAudioStreams()
 {
-    QSignalSpy spy(m_gst, &QGstreamerPlaybin::audioStreamsCountChanged);
+    QSignalSpy spy(m_gst, &QGstPlaybin::audioStreamsCountChanged);
 
     QCOMPARE(m_gst->audioStreamsCount(), 0);
     QTRY_VERIFY(spy.count() > 0);
     QCOMPARE(m_gst->audioStreamsCount(), 1);
 }
 
-void tst_QGstreamerPlaybin::testVideoStreams()
+void tst_Playbin::testVideoStreams()
 {
-    QSignalSpy spy(m_gst, &QGstreamerPlaybin::videoStreamsCountChanged);
+    QSignalSpy spy(m_gst, &QGstPlaybin::videoStreamsCountChanged);
 
     QCOMPARE(m_gst->videoStreamsCount(), 0);
     QTRY_VERIFY(spy.count() > 0);
     QCOMPARE(m_gst->videoStreamsCount(), 1);
 }
 
-void tst_QGstreamerPlaybin::testTextStreams()
+void tst_Playbin::testTextStreams()
 {
-    QSignalSpy spy(m_gst, &QGstreamerPlaybin::textStreamsCountChanged);
+    QSignalSpy spy(m_gst, &QGstPlaybin::textStreamsCountChanged);
 
     QCOMPARE(m_gst->textStreamsCount(), 0);
     QTRY_VERIFY(spy.count() > 0);
     QCOMPARE(m_gst->textStreamsCount(), 2);
 }
 
-void tst_QGstreamerPlaybin::testSetTextStream()
+void tst_Playbin::testSetTextStream()
 {
-    QSignalSpy spy(m_gst, &QGstreamerPlaybin::textStreamChanged);
+    QSignalSpy spy(m_gst, &QGstPlaybin::textStreamChanged);
 
     QCOMPARE(m_gst->textStream(), -1);
     QTRY_COMPARE(m_gst->textStreamsCount(), 2);
@@ -181,9 +181,9 @@ void tst_QGstreamerPlaybin::testSetTextStream()
     QTRY_COMPARE(m_gst->textStream(), 1);
 }
 
-void tst_QGstreamerPlaybin::testTextStreamProperties()
+void tst_Playbin::testTextStreamProperties()
 {
-    QSignalSpy spy(m_gst, &QGstreamerPlaybin::textStreamPropertiesChanged);
+    QSignalSpy spy(m_gst, &QGstPlaybin::textStreamPropertiesChanged);
 
     QCOMPARE(m_gst->textStreamsCount(), 0);
     QTRY_COMPARE(m_gst->textStreamsCount(), 2);
@@ -193,9 +193,9 @@ void tst_QGstreamerPlaybin::testTextStreamProperties()
     QCOMPARE(m_gst->textStreamProperties(1)["Language"], QVariant("no"));
 }
 
-void tst_QGstreamerPlaybin::testTextUriStreamProperties()
+void tst_Playbin::testTextUriStreamProperties()
 {
-    QSignalSpy spy(m_gst, &QGstreamerPlaybin::textStreamPropertiesChanged);
+    QSignalSpy spy(m_gst, &QGstPlaybin::textStreamPropertiesChanged);
 
     m_mediaPlayer->setMedia(QUrl());
     m_gst->setTextUri(QUrl::fromLocalFile(QFINDTESTDATA("testdata/text.srt")));
@@ -209,5 +209,5 @@ void tst_QGstreamerPlaybin::testTextUriStreamProperties()
     QCOMPARE(m_gst->textStreamProperties(2)["Language"], QVariant("no"));
 }
 
-QTEST_GUILESS_MAIN(tst_QGstreamerPlaybin)
-#include "tst_qgstreamerplaybin.moc"
+QTEST_GUILESS_MAIN(tst_Playbin)
+#include "tst_qgstplaybin.moc"

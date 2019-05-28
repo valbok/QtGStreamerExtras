@@ -2,7 +2,7 @@ import QtQuick 2.5
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.4
 import QtMultimedia 5.11
-import QtGstreamerExtras 5.12
+import QtGStreamerExtras 5.12
 
 ApplicationWindow {
     visible: true
@@ -13,7 +13,7 @@ ApplicationWindow {
     Item {
         anchors.fill: parent
 
-        GstreamerPipeline {
+        Pipeline {
             id: pl
             source: receiver
             pipeline: "udpsrc port=" + PORT + " ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegdec ! qtvideosink"

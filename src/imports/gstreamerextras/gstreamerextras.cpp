@@ -37,8 +37,7 @@
 **
 ****************************************************************************/
 
-#include "qtransparentrectangle_p.h"
-#include <QtGstreamerExtras/QGstreamerPlaybin>
+#include <QtGStreamerExtras/QGstPlaybin>
 
 #include <QtQml/qqmlextensionplugin.h>
 #include <QtQml/qqml.h>
@@ -47,7 +46,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class QQmlGstreamerExtrasModule : public QQmlExtensionPlugin
+class QQmlGStreamerExtrasModule : public QQmlExtensionPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID QQmlExtensionInterface_iid)
@@ -56,10 +55,10 @@ public:
     QQmlGstreamerExtrasModule(QObject *parent = nullptr) : QQmlExtensionPlugin(parent) { }
     void registerTypes(const char *uri) override
     {
-        Q_ASSERT(QLatin1String(uri) == QLatin1String("QtGstreamerExtras"));
+        Q_ASSERT(QLatin1String(uri) == QLatin1String("QtGStreamerExtras"));
 
-        qmlRegisterType<QGstreamerPipeline>(uri, 5, 12, "GstreamerPipeline");
-        qmlRegisterType<QGstreamerPlaybin>(uri, 5, 12, "GstreamerPlaybin");
+        qmlRegisterType<QGstPipeline>(uri, 5, 12, "Pipeline");
+        qmlRegisterType<QGstPlaybin>(uri, 5, 12, "Playbin");
     }
 };
 

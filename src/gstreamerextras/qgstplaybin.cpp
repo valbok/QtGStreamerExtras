@@ -37,9 +37,9 @@
 **
 ****************************************************************************/
 
-#include "qgstreamerplaybin.h"
-#include "qgstreamerpipeline_p.h"
-#include <private/qgstreamervideorendererinterface_p.h>
+#include "qgstplaybin.h"
+#include "qgstpipeline_p.h"
+#include <private/qgstvideorendererinterface_p.h>
 #include <QtMultimedia/qmediametadata.h>
 
 QT_BEGIN_NAMESPACE
@@ -56,13 +56,13 @@ typedef enum {
     GST_PLAY_FLAG_BUFFERING     = 0x000000100
 } GstPlayFlags;
 
-class QGstreamerPlaybinPrivate : public QGstreamerPipelinePrivate
+class QGstPlaybinPrivate : public QGstPipelinePrivate
 {
-    Q_DECLARE_PUBLIC(QGstreamerPlaybin)
+    Q_DECLARE_PUBLIC(QGstPlaybin)
 
 public:
-    QGstreamerPlaybinPrivate(QGstreamerPlaybin *q)
-        : QGstreamerPipelinePrivate(q)
+    QGstPlaybinPrivate(QGstPlaybin *q)
+        : QGstPipelinePrivate(q)
     {
     }
 
@@ -94,21 +94,21 @@ private:
     QList<QVariantMap> textStreamProperties;
 };
 
-void QGstreamerPlaybinPrivate::mediaPlayerChanged()
+void QGstPlaybinPrivate::mediaPlayerChanged()
 {
-    Q_Q(QGstreamerPlaybin);
+    Q_Q(QGstPlaybin);
 
     if (!isReady())
         return;
 
-    QObject::connect(session, &QGstreamerPlayerSession::streamsChanged,
+    QObject::connect(session, &QGstPlayerSession::streamsChanged,
         q, [this, q]() {
             streamsChanged();
             q->setAudioStream(pendingAudioStream);
             q->setVideoStream(pendingVideoStream);
             q->setTextStream(pendingTextStream);
         });
-    QObject::connect(session, &QGstreamerPlayerSession::rendererChanged,
+    QObject::connect(session, &QGstPlayerSession::rendererChanged,
         q, [this]() { updatePlaybin(); });
 
     // In case if these values've been applied
@@ -133,9 +133,9 @@ static GstElement *parseDesc(const QString &name)
     return element;
 }
 
-void QGstreamerPlaybinPrivate::updatePlaybin()
+void QGstPlaybinPrivate::updatePlaybin()
 {
-    Q_Q(QGstreamerPlaybin);
+    Q_Q(QGstPlaybin);
 
     auto r = renderer();
     if (!r || !r->isReady() || pendingVideoSinkDesc.isEmpty())
@@ -173,9 +173,9 @@ static QVariantMap getStreamProperties(GstElement *pipeline, const char *name, i
     return streamProperties;
 }
 
-void QGstreamerPlaybinPrivate::streamsChanged()
+void QGstPlaybinPrivate::streamsChanged()
 {
-    Q_Q(QGstreamerPlaybin);
+    Q_Q(QGstPlaybin);
 
     GstElement *playbin = q->pipeline();
     if (!playbin)
@@ -236,34 +236,34 @@ void QGstreamerPlaybinPrivate::streamsChanged()
         emit q->textStreamPropertiesChanged();
 }
 
-QGstreamerPlaybin::QGstreamerPlaybin(QMediaPlayer *media, QObject *parent)
-    : QGstreamerPipeline(new QGstreamerPlaybinPrivate(this), media, parent)
+QGstPlaybin::QGstPlaybin(QMediaPlayer *media, QObject *parent)
+    : QGstPipeline(new QGstPlaybinPrivate(this), media, parent)
 {
-    Q_D(QGstreamerPlaybin);
+    Q_D(QGstPlaybin);
 
-    connect(this, &QGstreamerPlaybin::mediaPlayerChanged,
+    connect(this, &QGstPlaybin::mediaPlayerChanged,
         this, [d]() { d->mediaPlayerChanged(); } );
 
     d->mediaPlayerChanged();
 }
 
-QGstreamerPlaybin::QGstreamerPlaybin(QObject *parent)
-    : QGstreamerPlaybin(nullptr, parent)
+QGstPlaybin::QGstPlaybin(QObject *parent)
+    : QGstPlaybin(nullptr, parent)
 {
 }
 
-QGstreamerPlaybin::~QGstreamerPlaybin()
+QGstPlaybin::~QGstPlaybin()
 {
 }
 
-QString QGstreamerPlaybin::videoSink() const
+QString QGstPlaybin::videoSink() const
 {
     return d_func()->videoSinkDesc;
 }
 
-void QGstreamerPlaybin::setVideoSink(const QString &desc)
+void QGstPlaybin::setVideoSink(const QString &desc)
 {
-    Q_D(QGstreamerPlaybin);
+    Q_D(QGstPlaybin);
 
     d->pendingVideoSinkDesc = desc;
     if (!d->isReady() || d->videoSinkDesc == desc)
@@ -272,14 +272,14 @@ void QGstreamerPlaybin::setVideoSink(const QString &desc)
     d->updatePlaybin();
 }
 
-bool QGstreamerPlaybin::showText() const
+bool QGstPlaybin::showText() const
 {
     return d_func()->showText;
 }
 
-void QGstreamerPlaybin::setShowText(bool show)
+void QGstPlaybin::setShowText(bool show)
 {
-    Q_D(QGstreamerPlaybin);
+    Q_D(QGstPlaybin);
 
     d->pendingShowText = show;
     GstElement *playbin = pipeline();
@@ -299,14 +299,14 @@ void QGstreamerPlaybin::setShowText(bool show)
     emit showTextChanged();
 }
 
-QUrl QGstreamerPlaybin::textUri() const
+QUrl QGstPlaybin::textUri() const
 {
     return d_func()->textUri;
 }
 
-void QGstreamerPlaybin::setTextUri(const QUrl &uri)
+void QGstPlaybin::setTextUri(const QUrl &uri)
 {
-    Q_D(QGstreamerPlaybin);
+    Q_D(QGstPlaybin);
 
     d->pendingTextUri = uri;
     GstElement *playbin = pipeline();
@@ -320,14 +320,14 @@ void QGstreamerPlaybin::setTextUri(const QUrl &uri)
     emit textUriChanged();
 }
 
-QString QGstreamerPlaybin::textFont() const
+QString QGstPlaybin::textFont() const
 {
     return d_func()->textFont;
 }
 
-void QGstreamerPlaybin::setTextFont(const QString &str)
+void QGstPlaybin::setTextFont(const QString &str)
 {
-    Q_D(QGstreamerPlaybin);
+    Q_D(QGstPlaybin);
 
     d->pendingTextFont = str;
     GstElement *playbin = pipeline();
@@ -339,19 +339,19 @@ void QGstreamerPlaybin::setTextFont(const QString &str)
     emit textFontChanged();
 }
 
-int QGstreamerPlaybin::audioStreamsCount() const
+int QGstPlaybin::audioStreamsCount() const
 {
     return d_func()->audioStreamsCount;
 }
 
-int QGstreamerPlaybin::audioStream() const
+int QGstPlaybin::audioStream() const
 {
     return d_func()->audioStream;
 }
 
-void QGstreamerPlaybin::setAudioStream(int i)
+void QGstPlaybin::setAudioStream(int i)
 {
-    Q_D(QGstreamerPlaybin);
+    Q_D(QGstPlaybin);
 
     d->pendingAudioStream = i;
     GstElement *playbin = pipeline();
@@ -363,24 +363,24 @@ void QGstreamerPlaybin::setAudioStream(int i)
     emit audioStreamChanged();
 }
 
-QVariantMap QGstreamerPlaybin::audioStreamProperties(int i)
+QVariantMap QGstPlaybin::audioStreamProperties(int i)
 {
     return d_func()->audioStreamProperties[i];
 }
 
-int QGstreamerPlaybin::videoStreamsCount() const
+int QGstPlaybin::videoStreamsCount() const
 {
     return d_func()->videoStreamsCount;
 }
 
-int QGstreamerPlaybin::videoStream() const
+int QGstPlaybin::videoStream() const
 {
     return d_func()->videoStream;
 }
 
-void QGstreamerPlaybin::setVideoStream(int i)
+void QGstPlaybin::setVideoStream(int i)
 {
-    Q_D(QGstreamerPlaybin);
+    Q_D(QGstPlaybin);
 
     d->pendingVideoStream = i;
     GstElement *playbin = pipeline();
@@ -392,24 +392,24 @@ void QGstreamerPlaybin::setVideoStream(int i)
     emit videoStreamChanged();
 }
 
-QVariantMap QGstreamerPlaybin::videoStreamProperties(int i)
+QVariantMap QGstPlaybin::videoStreamProperties(int i)
 {
     return d_func()->videoStreamProperties[i];
 }
 
-int QGstreamerPlaybin::textStreamsCount() const
+int QGstPlaybin::textStreamsCount() const
 {
     return d_func()->textStreamsCount;
 }
 
-int QGstreamerPlaybin::textStream() const
+int QGstPlaybin::textStream() const
 {
     return d_func()->textStream;
 }
 
-void QGstreamerPlaybin::setTextStream(int i)
+void QGstPlaybin::setTextStream(int i)
 {
-    Q_D(QGstreamerPlaybin);
+    Q_D(QGstPlaybin);
 
     d->pendingTextStream = i;
     GstElement *playbin = pipeline();
@@ -421,7 +421,7 @@ void QGstreamerPlaybin::setTextStream(int i)
     emit textStreamChanged();
 }
 
-QVariantMap QGstreamerPlaybin::textStreamProperties(int i)
+QVariantMap QGstPlaybin::textStreamProperties(int i)
 {
     return d_func()->textStreamProperties[i];
 }

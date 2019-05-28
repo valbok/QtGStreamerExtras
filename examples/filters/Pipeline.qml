@@ -39,7 +39,7 @@
 
 import QtQuick 2.0
 import QtMultimedia 5.11
-import QtGstreamerExtras 5.12
+import QtGStreamerExtras 5.12
 
 Item {
     id: video
@@ -56,7 +56,7 @@ Item {
         autoPlay: true
     }
 
-    GstreamerPipeline {
+    Pipeline {
         id: gst
         source: player
     }

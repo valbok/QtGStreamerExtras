@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 SUBDIRS += \
     qml \
-    qgstreamerpipeline \
-    qgstreamerplaybin
+    pipeline \
+    playbin
 
 

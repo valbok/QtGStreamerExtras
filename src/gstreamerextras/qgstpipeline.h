@@ -37,8 +37,8 @@
 **
 ****************************************************************************/
 
-#ifndef QGSTREAMERPIPELINE_H
-#define QGSTREAMERPIPELINE_H
+#ifndef QGSTPIPELINE_H
+#define QGSTPIPELINE_H
 
 #include <QtMultimedia/qtmultimediaglobal.h>
 #include <QVariantMap>
@@ -48,8 +48,8 @@
 QT_BEGIN_NAMESPACE
 
 class QMediaPlayer;
-class QGstreamerPipelinePrivate;
-class Q_MULTIMEDIA_EXPORT QGstreamerPipeline : public QObject
+class QGstPipelinePrivate;
+class Q_MULTIMEDIA_EXPORT QGstPipeline : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QObject* source READ source WRITE setSource NOTIFY sourceChanged)
@@ -57,9 +57,9 @@ class Q_MULTIMEDIA_EXPORT QGstreamerPipeline : public QObject
     Q_PROPERTY(QString pipeline READ pipelineDesc WRITE setPipeline NOTIFY pipelineChanged)
 
 public:
-    QGstreamerPipeline(QObject *parent = nullptr);
-    QGstreamerPipeline(QMediaPlayer *player, QObject *parent = nullptr);
-    ~QGstreamerPipeline();
+    QGstPipeline(QObject *parent = nullptr);
+    QGstPipeline(QMediaPlayer *player, QObject *parent = nullptr);
+    ~QGstPipeline();
 
     QObject *source() const;
     void setSource(QObject *source);
@@ -82,14 +82,14 @@ private Q_SLOTS:
     void updateMediaPlayer();
 
 protected:
-    QGstreamerPipeline(QGstreamerPipelinePrivate *d,
+    QGstPipeline(QGstPipelinePrivate *d,
         QMediaPlayer *player = nullptr, QObject *parent = nullptr);
 
-    QGstreamerPipelinePrivate *d_ptr = nullptr;
+    QGstPipelinePrivate *d_ptr = nullptr;
 
 private:
-    Q_DISABLE_COPY(QGstreamerPipeline)
-    Q_DECLARE_PRIVATE(QGstreamerPipeline)
+    Q_DISABLE_COPY(QGstPipeline)
+    Q_DECLARE_PRIVATE(QGstPipeline)
 };
 
 QT_END_NAMESPACE

@@ -1,19 +1,19 @@
-TARGET = QtGstreamerExtras
+TARGET = QtGStreamerExtras
 
 QT = multimediagsttools_private
 
 PUBLIC_HEADERS += \
-    qgstreamerpipeline.h \
-    qgstreamerplaybin.h
+    qgstpipeline.h \
+    qgstplaybin.h
 
 PRIVATE_HEADERS += \
-    qgstreamerpipeline_p.h \
-    qgstreamerappsrc_p.h
+    qgstpipeline_p.h \
+    qgstappsrc_p.h
 
 SOURCES += \
-    qgstreamerplaybin.cpp \
-    qgstreamerpipeline.cpp \
-    qgstreamerappsrc.cpp
+    qgstplaybin.cpp \
+    qgstpipeline.cpp \
+    qgstappsrc.cpp
 
 CONFIG += simd optimize_full
 

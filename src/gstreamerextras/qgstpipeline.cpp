@@ -37,48 +37,48 @@
 **
 ****************************************************************************/
 
-#include "qgstreamerpipeline.h"
-#include "qgstreamerpipeline_p.h"
-#include <private/qgstreamervideorenderer_p.h>
+#include "qgstpipeline.h"
+#include "qgstpipeline_p.h"
+#include <private/qgstvideorenderer_p.h>
 #include <QMediaService>
 
 QT_BEGIN_NAMESPACE
 
-QGstreamerVideoRendererInterface *QGstreamerPipelinePrivate::renderer() const
+QGstVideoRendererInterface *QGstPipelinePrivate::renderer() const
 {
     return session ? session->renderer() : nullptr;
 }
 
-QGstreamerPipeline::QGstreamerPipeline(QObject *parent)
-    : QGstreamerPipeline(new QGstreamerPipelinePrivate(this), nullptr, parent)
+QGstPipeline::QGstPipeline(QObject *parent)
+    : QGstPipeline(new QGstPipelinePrivate(this), nullptr, parent)
 {
 }
 
-QGstreamerPipeline::QGstreamerPipeline(QMediaPlayer *player, QObject *parent)
-    : QGstreamerPipeline(new QGstreamerPipelinePrivate(this), player, parent)
+QGstPipeline::QGstPipeline(QMediaPlayer *player, QObject *parent)
+    : QGstPipeline(new QGstPipelinePrivate(this), player, parent)
 {
 }
 
-QGstreamerPipeline::QGstreamerPipeline(QGstreamerPipelinePrivate *d, QMediaPlayer *player, QObject *parent)
+QGstPipeline::QGstPipeline(QGstPipelinePrivate *d, QMediaPlayer *player, QObject *parent)
     : QObject(parent)
     , d_ptr(d)
 {
     setMediaPlayer(player);
 }
 
-QGstreamerPipeline::~QGstreamerPipeline()
+QGstPipeline::~QGstPipeline()
 {
     delete d_ptr;
 }
 
-QObject *QGstreamerPipeline::source() const
+QObject *QGstPipeline::source() const
 {
     return d_func()->source.data();
 }
 
-void QGstreamerPipeline::setSource(QObject *src)
+void QGstPipeline::setSource(QObject *src)
 {
-    Q_D(QGstreamerPipeline);
+    Q_D(QGstPipeline);
 
     if (d->source == src)
         return;
@@ -105,33 +105,33 @@ void QGstreamerPipeline::setSource(QObject *src)
     emit sourceChanged();
 }
 
-void QGstreamerPipeline::updateMediaPlayer()
+void QGstPipeline::updateMediaPlayer()
 {
     QMediaPlayer *obj = qobject_cast<QMediaPlayer*>(
         d_func()->source->property("mediaObject").value<QObject*>());
     setMediaPlayer(obj);
 }
 
-QMediaPlayer *QGstreamerPipeline::mediaPlayer() const
+QMediaPlayer *QGstPipeline::mediaPlayer() const
 {
     return d_func()->mediaPlayer.data();
 }
 
-void QGstreamerPipeline::setMediaPlayer(QMediaPlayer *src)
+void QGstPipeline::setMediaPlayer(QMediaPlayer *src)
 {
-    Q_D(QGstreamerPipeline);
+    Q_D(QGstPipeline);
 
     auto service = src ? src->service() : nullptr;
     if (!service)
         return;
 
-    auto control = qobject_cast<QGstreamerPlayerControl *>(service->requestControl(QMediaPlayerControl_iid));
+    auto control = qobject_cast<QGstPlayerControl *>(service->requestControl(QMediaPlayerControl_iid));
     d->session = control ? control->session() : nullptr;
     if (!d->session)
         return;
 
-    connect(d->session, &QGstreamerPlayerSession::pipelineChanged,
-        this, &QGstreamerPipeline::pipelineChanged);
+    connect(d->session, &QGstPlayerSession::pipelineChanged,
+        this, &QGstPipeline::pipelineChanged);
 
     d->mediaPlayer = src;
     emit mediaPlayerChanged();
@@ -139,14 +139,14 @@ void QGstreamerPipeline::setMediaPlayer(QMediaPlayer *src)
     setPipeline(d->pendingPipelineDesc);
 }
 
-QString QGstreamerPipeline::pipelineDesc() const
+QString QGstPipeline::pipelineDesc() const
 {
     return d_func()->pipelineDesc;
 }
 
-void QGstreamerPipeline::setPipeline(const QString &desc)
+void QGstPipeline::setPipeline(const QString &desc)
 {
-    Q_D(QGstreamerPipeline);
+    Q_D(QGstPipeline);
 
     d->pendingPipelineDesc = desc;
     if (!d->mediaPlayer || d->pipelineDesc == desc)
@@ -162,7 +162,7 @@ void QGstreamerPipeline::setPipeline(const QString &desc)
     d->pendingPipelineDesc.clear();
 }
 
-GstElement *QGstreamerPipeline::pipeline() const
+GstElement *QGstPipeline::pipeline() const
 {
     return d_ptr->session ? d_ptr->session->pipeline() : nullptr;
 }
@@ -173,9 +173,9 @@ static void setGstProperty(GstElement *element, const QString &name, T v)
     g_object_set(G_OBJECT(element), name.toLatin1().constData(), v, NULL);
 }
 
-bool QGstreamerPipeline::set(const QString &elementName, const QVariantMap &map)
+bool QGstPipeline::set(const QString &elementName, const QVariantMap &map)
 {
-    Q_D(QGstreamerPipeline);
+    Q_D(QGstPipeline);
 
     GstElement *element = nullptr;
     if (d->session) {

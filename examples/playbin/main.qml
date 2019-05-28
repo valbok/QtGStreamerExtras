@@ -41,7 +41,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.12
 import QtMultimedia 5.11
-import QtGstreamerExtras 5.12
+import QtGStreamerExtras 5.12
 
 Rectangle {
     id: root
@@ -74,7 +74,7 @@ Rectangle {
                 autoPlay: true
             }
 
-            GstreamerPlaybin {
+            Playbin {
                 id: gst
                 source: player
                 videoSink: root.videoSink

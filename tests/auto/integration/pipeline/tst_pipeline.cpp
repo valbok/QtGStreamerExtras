@@ -26,7 +26,7 @@
 **
 ****************************************************************************/
 
-#include <QGstreamerPipeline>
+#include <QGstPipeline>
 #include <QMediaPlayer>
 #include <QAbstractVideoSurface>
 #include <QVideoWidget>
@@ -34,7 +34,7 @@
 
 QT_USE_NAMESPACE
 
-class tst_QGstreamerPipeline: public QObject
+class tst_Pipeline: public QObject
 {
     Q_OBJECT
 private slots:
@@ -46,7 +46,7 @@ private slots:
 
 private:
     QMediaPlayer *mediaPlayer = nullptr;
-    QGstreamerPipeline *control = nullptr;
+    QGstPipeline *control = nullptr;
 };
 
 struct Surface : QAbstractVideoSurface
@@ -68,20 +68,20 @@ struct Surface : QAbstractVideoSurface
     bool present(const QVideoFrame &) override { return true; }
 };
 
-void tst_QGstreamerPipeline::testMediaPlayer()
+void tst_Pipeline::testMediaPlayer()
 {
     QMediaPlayer mediaPlayer;
-    QGstreamerPipeline p(&mediaPlayer);
+    QGstPipeline p(&mediaPlayer);
 
     QVERIFY(!p.source());
     QCOMPARE(p.mediaPlayer(), &mediaPlayer);
 }
 
-void tst_QGstreamerPipeline::testPipeline()
+void tst_Pipeline::testPipeline()
 {
     QMediaPlayer mediaPlayer;
-    QGstreamerPipeline p(&mediaPlayer);
-    QSignalSpy spy(&p, &QGstreamerPipeline::pipelineChanged);
+    QGstPipeline p(&mediaPlayer);
+    QSignalSpy spy(&p, &QGstPipeline::pipelineChanged);
 
     QString pl = "videotestsrc ! autovideosink";
     p.setPipeline(pl);
@@ -91,14 +91,14 @@ void tst_QGstreamerPipeline::testPipeline()
     QVERIFY(p.pipeline());
 }
 
-void tst_QGstreamerPipeline::testPipelineSurface()
+void tst_Pipeline::testPipelineSurface()
 {
     QMediaPlayer mediaPlayer;
     Surface *s = new Surface(this);
     mediaPlayer.setVideoOutput(s);
 
-    QGstreamerPipeline p(&mediaPlayer);
-    QSignalSpy spy(&p, &QGstreamerPipeline::pipelineChanged);
+    QGstPipeline p(&mediaPlayer);
+    QSignalSpy spy(&p, &QGstPipeline::pipelineChanged);
 
     QString pl = "videotestsrc ! xvimagesink name=qtvideosink";
     p.setPipeline(pl);
@@ -110,14 +110,14 @@ void tst_QGstreamerPipeline::testPipelineSurface()
     QVERIFY(p.pipeline());
 }
 
-void tst_QGstreamerPipeline::testPipelineWidget()
+void tst_Pipeline::testPipelineWidget()
 {
     QMediaPlayer mediaPlayer;
     QVideoWidget w;
     mediaPlayer.setVideoOutput(&w);
 
-    QGstreamerPipeline p(&mediaPlayer);
-    QSignalSpy spy(&p, &QGstreamerPipeline::pipelineChanged);
+    QGstPipeline p(&mediaPlayer);
+    QSignalSpy spy(&p, &QGstPipeline::pipelineChanged);
 
     QString pl = "videotestsrc ! xvimagesink name=qtvideosink";
     p.setPipeline(pl);
@@ -129,10 +129,10 @@ void tst_QGstreamerPipeline::testPipelineWidget()
     QVERIFY(p.pipeline());
 }
 
-void tst_QGstreamerPipeline::testSetProperty()
+void tst_Pipeline::testSetProperty()
 {
     QMediaPlayer mediaPlayer;
-    QGstreamerPipeline p(&mediaPlayer);
+    QGstPipeline p(&mediaPlayer);
     p.setPipeline(QLatin1String("videotestsrc name=src ! autovideosink"));
 
     QVariantMap m;
@@ -141,5 +141,5 @@ void tst_QGstreamerPipeline::testSetProperty()
     QCOMPARE(mediaPlayer.error(), QMediaPlayer::NoError);
 }
 
-QTEST_MAIN(tst_QGstreamerPipeline)
-#include "tst_qgstreamerpipeline.moc"
+QTEST_MAIN(tst_Pipeline)
+#include "tst_qgstpipeline.moc"

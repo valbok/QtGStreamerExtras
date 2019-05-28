@@ -37,17 +37,17 @@
 **
 ****************************************************************************/
 
-#include "qgstreamerappsrc_p.h"
+#include "qgstappsrc_p.h"
 #include <private/qgstutils_p.h>
 
 QT_BEGIN_NAMESPACE
 
-class QGstreamerAppSrcPrivate
+class QGstAppSrcPrivate
 {
-    Q_DECLARE_PUBLIC(QGstreamerAppSrc)
+    Q_DECLARE_PUBLIC(QGstAppSrc)
 
 public:
-    QGstreamerAppSrcPrivate(GstElement *src, QGstreamerAppSrc *q)
+    QGstAppSrcPrivate(GstElement *src, QGstAppSrc *q)
         : appsrc(src)
         , q_ptr(q)
     {
@@ -57,13 +57,13 @@ public:
 
 private:
     GstElement *appsrc = nullptr;
-    QGstreamerAppSrc *q_ptr = nullptr;
+    QGstAppSrc *q_ptr = nullptr;
     int timerMsec = 30;
     int timerId = 0;
     QSize size;
 };
 
-bool QGstreamerAppSrcPrivate::restart(QVideoFrame &frame)
+bool QGstAppSrcPrivate::restart(QVideoFrame &frame)
 {
     QList<QVideoFrame::PixelFormat> cc;
     cc << frame.pixelFormat();
@@ -87,22 +87,22 @@ bool QGstreamerAppSrcPrivate::restart(QVideoFrame &frame)
     return true;
 }
 
-static void start_feed(GstElement *pipeline, guint size, QGstreamerAppSrc *q)
+static void start_feed(GstElement *pipeline, guint size, QGstAppSrc *q)
 {
     Q_UNUSED(pipeline);
     Q_UNUSED(size);
     QMetaObject::invokeMethod(q, "startFeed", Qt::QueuedConnection);
 }
 
-static void stop_feed(GstElement *pipeline, QGstreamerAppSrc *q)
+static void stop_feed(GstElement *pipeline, QGstAppSrc *q)
 {
     Q_UNUSED(pipeline);
     QMetaObject::invokeMethod(q, "stopFeed", Qt::QueuedConnection);
 }
 
-void QGstreamerAppSrc::startFeed()
+void QGstAppSrc::startFeed()
 {
-    Q_D(QGstreamerAppSrc);
+    Q_D(QGstAppSrc);
 
     if (d->timerId)
         return;
@@ -110,9 +110,9 @@ void QGstreamerAppSrc::startFeed()
     d->timerId = startTimer(d->timerMsec);
 }
 
-void QGstreamerAppSrc::stopFeed()
+void QGstAppSrc::stopFeed()
 {
-    Q_D(QGstreamerAppSrc);
+    Q_D(QGstAppSrc);
 
     if (!d->timerId)
         return;
@@ -121,15 +121,15 @@ void QGstreamerAppSrc::stopFeed()
     d->timerId = 0;
 }
 
-bool QGstreamerAppSrc::readFrame(QVideoFrame &frame) const
+bool QGstAppSrc::readFrame(QVideoFrame &frame) const
 {
     Q_UNUSED(frame);
     return false;
 }
 
-void QGstreamerAppSrc::timerEvent(QTimerEvent *event)
+void QGstAppSrc::timerEvent(QTimerEvent *event)
 {
-    Q_D(QGstreamerAppSrc);
+    Q_D(QGstAppSrc);
 
     if (event->timerId() != d->timerId)
         return;
@@ -164,9 +164,9 @@ void QGstreamerAppSrc::timerEvent(QTimerEvent *event)
     frame.unmap();
 }
 
-QGstreamerAppSrc::QGstreamerAppSrc(GstElement *appsrc, QObject *parent)
+QGstAppSrc::QGstAppSrc(GstElement *appsrc, QObject *parent)
     : QObject(parent)
-    , d_ptr(new QGstreamerAppSrcPrivate(appsrc, this))
+    , d_ptr(new QGstAppSrcPrivate(appsrc, this))
 {
     g_signal_connect(appsrc, "need-data", G_CALLBACK(start_feed), this);
     g_signal_connect(appsrc, "enough-data", G_CALLBACK(stop_feed), this);    
@@ -176,7 +176,7 @@ QGstreamerAppSrc::QGstreamerAppSrc(GstElement *appsrc, QObject *parent)
     g_object_set(G_OBJECT(appsrc), "is-live", TRUE, NULL);
 }
 
-QGstreamerAppSrc::~QGstreamerAppSrc()
+QGstAppSrc::~QGstAppSrc()
 {
     delete d_ptr;
 }

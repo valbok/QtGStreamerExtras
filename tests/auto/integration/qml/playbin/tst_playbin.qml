@@ -28,14 +28,14 @@
 
 import QtQuick 2.0
 import QtMultimedia 5.9
-import QtGstreamerExtras 5.12
+import QtGStreamerExtras 5.12
 import QtTest 1.0
 
 Item {
     id: top
 
-    property string srcMp4: "../../qgstreamerplaybin/testdata/colors.mp4"
-    property string srcText: "../../qgstreamerplaybin/testdata/text.srt"
+    property string srcMp4: "../../qgstplaybin/testdata/colors.mp4"
+    property string srcText: "../../qgstplaybin/testdata/text.srt"
 
     VideoOutput {
         id: video
@@ -49,7 +49,7 @@ Item {
         source: srcMp4
     }
 
-    GstreamerPlaybin {
+    Playbin {
         id: control
         source: player
         textUri: srcText

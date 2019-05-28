@@ -28,7 +28,7 @@ tmp
 #include
 
 src/gstreamer/qtgstreamerversion.h
-QtGstreamerExtras.version*
+QtGStreamerExtras.version*
 *-config*
 config.*
 .qmake.cache

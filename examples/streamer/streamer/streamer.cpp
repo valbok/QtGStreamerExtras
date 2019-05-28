@@ -74,9 +74,9 @@ bool AppSrc::readFrame(QVideoFrame &frame) const
 }
 
 Streamer::Streamer(QObject *parent)
-    : QGstreamerPipeline(parent)
+    : QGstPipeline(parent)
 {
-    connect(this, &QGstreamerPipeline::pipelineChanged,
+    connect(this, &QGstPipeline::pipelineChanged,
         this, &Streamer::onPipelineChanged);
 }
 

@@ -37,17 +37,17 @@
 **
 ****************************************************************************/
 
-#ifndef QGSTREAMERPLAYBIN_H
-#define QGSTREAMERPLAYBIN_H
+#ifndef QGSTPLAYBIN_H
+#define QGSTPLAYBIN_H
 
-#include <QtGstreamerExtras/QGstreamerPipeline>
+#include <QtGStreamerExtras/QGstPipeline>
 #include <QVariantMap>
 #include <QUrl>
 
 QT_BEGIN_NAMESPACE
 
-class QGstreamerPlaybinPrivate;
-class Q_MULTIMEDIA_EXPORT QGstreamerPlaybin : public QGstreamerPipeline
+class QGstPlaybinPrivate;
+class Q_MULTIMEDIA_EXPORT QGstPlaybin : public QGstPipeline
 {
     Q_OBJECT
     Q_PROPERTY(QString videoSink READ videoSink WRITE setVideoSink NOTIFY videoSinkChanged)
@@ -62,9 +62,9 @@ class Q_MULTIMEDIA_EXPORT QGstreamerPlaybin : public QGstreamerPipeline
     Q_PROPERTY(int textStream READ textStream WRITE setTextStream NOTIFY textStreamChanged)
 
 public:
-    QGstreamerPlaybin(QMediaPlayer *player, QObject *parent = nullptr);
-    QGstreamerPlaybin(QObject *parent = nullptr);
-    ~QGstreamerPlaybin();
+    QGstPlaybin(QMediaPlayer *player, QObject *parent = nullptr);
+    QGstPlaybin(QObject *parent = nullptr);
+    ~QGstPlaybin();
 
     QString videoSink() const;
     void setVideoSink(const QString &name);
@@ -112,8 +112,8 @@ Q_SIGNALS:
     void textStreamPropertiesChanged();
 
 private:
-    Q_DISABLE_COPY(QGstreamerPlaybin)
-    Q_DECLARE_PRIVATE(QGstreamerPlaybin)
+    Q_DISABLE_COPY(QGstPlaybin)
+    Q_DECLARE_PRIVATE(QGstPlaybin)
 };
 
 QT_END_NAMESPACE

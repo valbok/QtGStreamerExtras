@@ -1,4 +1,4 @@
 CONFIG += testcase
-TARGET = tst_qgstreamerpipeline
+TARGET = tst_pipeline
 QT += network gstreamerextras-private multimedia-private testlib
-SOURCES += tst_qgstreamerpipeline.cpp
+SOURCES += tst_pipeline.cpp

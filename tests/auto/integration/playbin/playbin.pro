@@ -1,5 +1,5 @@
 CONFIG += testcase
-TARGET = tst_qgstreamerplaybin
+TARGET = tst_playbin
 QT += network gstreamerextras-private multimedia-private testlib
-SOURCES += tst_qgstreamerplaybin.cpp
+SOURCES += tst_playbin.cpp
 RESOURCES += testdata.qrc

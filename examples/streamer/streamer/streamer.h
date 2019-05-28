@@ -51,20 +51,20 @@
 #ifndef STREAMER_H
 #define STREAMER_H
 
-#include <QGstreamerPipeline>
-#include <private/qgstreamerappsrc_p.h>
+#include <QGstPipeline>
+#include <private/qgstappsrc_p.h>
 #include <QScopedPointer>
 #include <QPointer>
 #include <QQuickWindow>
 #include <QQuickItem>
 
 class Streamer;
-class AppSrc : public QGstreamerAppSrc
+class AppSrc : public QGstAppSrc
 {
     Q_OBJECT
 public:
     AppSrc(Streamer *streamer, GstElement *appsrc, QObject *parent = nullptr)
-        : QGstreamerAppSrc(appsrc, parent)
+        : QGstAppSrc(appsrc, parent)
         , m_streamer(streamer)
     {
     }
@@ -81,7 +81,7 @@ private:
     mutable QVideoFrame m_frame;
 };
 
-class Streamer : public QGstreamerPipeline
+class Streamer : public QGstPipeline
 {
     Q_OBJECT
     Q_PROPERTY(QObject* item READ item WRITE setItem NOTIFY itemChanged)

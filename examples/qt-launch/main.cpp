@@ -48,7 +48,7 @@
 **
 ****************************************************************************/
 
-#include <QGstreamerPipeline>
+#include <QGstPipeline>
 #include <QApplication>
 #include <QMediaPlayer>
 #include <QVideoWidget>
@@ -84,8 +84,8 @@ int main(int argc, char *argv[])
         ? parser.positionalArguments().join(" ")
         : QLatin1String("videotestsrc ! xvimagesink name=qtvideosink");
 
-    QGstreamerPipeline gst(&player);
-    QObject::connect(&gst, &QGstreamerPipeline::pipelineChanged, [&](){
+    QGstPipeline gst(&player);
+    QObject::connect(&gst, &QGstPipeline::pipelineChanged, [&](){
         if (!gst_bin_get_by_name(GST_BIN(gst.pipeline()), "qtvideosink"))
             return;
 

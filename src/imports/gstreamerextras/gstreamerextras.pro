@@ -1,6 +1,6 @@
 CXX_MODULE = gstreamerextras
 TARGET  = declarative_gstreamer
-TARGETPATH = QtGstreamerExtras
+TARGETPATH = QtGStreamerExtras
 
 QT += gstreamerextras qtmultimediaquicktools-private multimedia-private quick-private
 
