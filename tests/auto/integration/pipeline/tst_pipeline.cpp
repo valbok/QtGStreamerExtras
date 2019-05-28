@@ -142,4 +142,4 @@ void tst_Pipeline::testSetProperty()
 }
 
 QTEST_MAIN(tst_Pipeline)
-#include "tst_qgstpipeline.moc"
+#include "tst_pipeline.moc"

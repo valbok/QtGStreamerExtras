@@ -34,8 +34,8 @@ import QtTest 1.0
 Item {
     id: top
 
-    property string srcMp4: "../../qgstplaybin/testdata/colors.mp4"
-    property string srcText: "../../qgstplaybin/testdata/text.srt"
+    property string srcMp4: "../../playbin/testdata/colors.mp4"
+    property string srcText: "../../playbin/testdata/text.srt"
 
     VideoOutput {
         id: video

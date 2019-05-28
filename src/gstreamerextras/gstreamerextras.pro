@@ -8,12 +8,12 @@ PUBLIC_HEADERS += \
 
 PRIVATE_HEADERS += \
     qgstpipeline_p.h \
-    qgstappsrc_p.h
+    qgstvideoappsrc_p.h
 
 SOURCES += \
     qgstplaybin.cpp \
     qgstpipeline.cpp \
-    qgstappsrc.cpp
+    qgstvideoappsrc.cpp
 
 CONFIG += simd optimize_full
 

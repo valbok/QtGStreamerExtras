@@ -210,4 +210,4 @@ void tst_Playbin::testTextUriStreamProperties()
 }
 
 QTEST_GUILESS_MAIN(tst_Playbin)
-#include "tst_qgstplaybin.moc"
+#include "tst_playbin.moc"

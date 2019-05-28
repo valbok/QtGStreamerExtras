@@ -37,8 +37,8 @@
 **
 ****************************************************************************/
 
-#ifndef QGSTAPPSRC_H
-#define QGSTAPPSRC_H
+#ifndef QGSTVIDEOAPPSRC_H
+#define QGSTVIDEOAPPSRC_H
 
 //
 //  W A R N I N G
@@ -56,13 +56,13 @@
 
 QT_BEGIN_NAMESPACE
 
-class QGstAppSrcPrivate;
-class Q_MULTIMEDIA_EXPORT QGstAppSrc : public QObject
+class QGstVideoAppSrcPrivate;
+class Q_MULTIMEDIA_EXPORT QGstVideoAppSrc : public QObject
 {
     Q_OBJECT
 public:
-    QGstAppSrc(GstElement *appsrc, QObject *parent = nullptr);
-    ~QGstAppSrc();
+    QGstVideoAppSrc(GstElement *appsrc, QObject *parent = nullptr);
+    ~QGstVideoAppSrc();
 
 protected:
     virtual bool readFrame(QVideoFrame &frame) const;
@@ -74,12 +74,12 @@ private Q_SLOTS:
 private:
     void timerEvent(QTimerEvent *event) override;
 
-    Q_DISABLE_COPY(QGstAppSrc)
-    Q_DECLARE_PRIVATE(QGstAppSrc)
+    Q_DISABLE_COPY(QGstVideoAppSrc)
+    Q_DECLARE_PRIVATE(QGstVideoAppSrc)
 
-    QGstAppSrcPrivate *d_ptr = nullptr;
+    QGstVideoAppSrcPrivate *d_ptr = nullptr;
 };
 
 QT_END_NAMESPACE
 
-#endif // QGSTAPPSRC_H
+#endif // QGSTVIDEOAPPSRC_H
