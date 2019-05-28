@@ -19,7 +19,7 @@ QtGStreamerExtras is Qt module that extends GStreamer functionality of Qt Multim
             autoPlay: true
         }
     
-        GStreamerPipeline {
+        Pipeline {
             id: gst
             pipeline: "videotestsrc ! qtvideosink"
         }
